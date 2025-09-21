@@ -59,7 +59,7 @@ console.log("Body received:", req.body);
 //   });
 // }
 
- console.log(req.files)
+//  console.log(req.files)
  // check for images,check for avatar--->multer
  const avatarLocalPath = req.files?.avatar?.[0]?.path;
 const coverImageLocalPath = req.files?.coverImage?.[0]?.path || null;

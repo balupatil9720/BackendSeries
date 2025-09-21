@@ -55,7 +55,7 @@ import jwt from 'jsonwebtoken'
   userSchema.pre("save", async function(next) {
     if(!this.isModified("password")) return next();
 
-    this.password=bcrypt.hash(this.password,10); // 10-->number of rounds in encryption
+    this.password= await bcrypt.hash(this.password,10); // 10-->number of rounds in encryption
     next()
   })
 

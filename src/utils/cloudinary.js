@@ -29,13 +29,13 @@ import fs from 'fs'    // fs--->stands for file system i nodejs -->helps in file
     }
 
 
-    cloudinary.v2.uploader
-       .upload(
-           'https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg', 
-           {public_id: 'shoes', }
-       )
-       .catch((error) => {
-           console.log(error);
-       });
+    // cloudinary.v2.uploader
+    //    .upload(
+    //        'https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg', 
+    //        {public_id: 'shoes', }
+    //    )
+    //    .catch((error) => {
+    //        console.log(error);
+    //    });
 
         export {UploadOnCloudinary}

@@ -20,7 +20,7 @@ import jwt from 'jsonwebtoken'
         trim:true
      },
         fullName:{
-        type:[String],
+        type:String,
         required:true,
         trim:true,
         index:true
@@ -29,7 +29,7 @@ import jwt from 'jsonwebtoken'
         type:String,   // cloudinary url
         required:true,
      },
-     watchhistory:[
+     watchHistory:[
         {
             type:Schema.Types.ObjectId,
             ref:"Video"
@@ -40,7 +40,7 @@ import jwt from 'jsonwebtoken'
         required:[true,"Password is required"]
      },
      refreshToken:{
-        type:Object
+        type:String
      }
  },
  {
@@ -68,27 +68,27 @@ import jwt from 'jsonwebtoken'
             _id:this.id,
             email:this.email,
             username:this.username,
-            fullname:this.fullname
+            fullName:this.fullName
 
         },
         process.env.ACCESS_TOKEN_SECRET,{
-            expiresIn:process.env.REFRESH_TOKEN_EXPIRY
+            expiresIn:process.env.ACCESS_TOKEN_EXPIRY
         }
     )
   }
 
    // method to generate the Refresh token
-  userSchema.methods.generateAccessToken= function(){
+  userSchema.methods.generateRefreshToken= function(){
      return jwt.sign(
         {
             _id:this.id,
         },
         process.env.REFRESH_TOKEN_SECRET,{
-            expiresIn:process.env.ACCESS_TOKEN_EXPIRY
+            expiresIn:process.env.REFRESH_TOKEN_EXPIRY
         }
     )
   }
-    userSchema.methods.generateRefreshToken= function(){}
+   //  userSchema.methods.generateRefreshToken= function(){}
 
        // for token--->jsonwebtoken/(jwt)
  // becrypt---->  library that helps to hash your passwords

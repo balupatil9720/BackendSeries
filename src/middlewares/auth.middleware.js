@@ -1,7 +1,8 @@
-import { ApiError } from "../utils/ApiErrors";
-import { asyncHandler } from "../utils/asyncHandler";
+import { ApiError } from "../utils/ApiErrors.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken"
-import { User } from "../models/user.model";
+import { User } from "../models/user.model.js";
+import 'dotenv/config';
 
 
  
@@ -9,8 +10,11 @@ import { User } from "../models/user.model";
  
  export const verifyJWt=asyncHandler(async(req,_,next)=>{
     try {
-        const token= req.cookies?.accessToken||req.header
-        ("Authorization")?.replace("Bearer ","")
+       const token =
+  req.cookies?.accessToken ||
+  req.header("Authorization")?.replace(/^Bearer\s+/i, "")?.trim();
+
+  console.log("Token received for verification:", token);
     
         if (!token) {
              throw new ApiError(401,"Unauthorised request")

@@ -19,17 +19,13 @@ import jwt from 'jsonwebtoken'
         lowercase:true,
         trim:true
      },
-        fullname:{
-        type:String,
+        fullName:{
+        type:[String],
         required:true,
         trim:true,
         index:true
      },
-        username:{
-        type:String,   // cloudinary url
-        required:true,
-     },
-         coverImage:{
+         avatar:{
         type:String,   // cloudinary url
         required:true,
      },

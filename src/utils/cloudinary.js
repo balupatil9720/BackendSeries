@@ -17,8 +17,9 @@ import fs from 'fs'    // fs--->stands for file system i nodejs -->helps in file
                 resource_type:"auto"
              })
              // file has been uplaoded successfully
-             console.log("File is uploaded on cloudinary",response.url);
-             return response;
+            //  console.log("File is uploaded on cloudinary",response.url);
+            fs.unlinkSync(localFilePath)          
+            return response;
               // upload hone ke baad
              // jo public url hai wo
         } catch (error) {

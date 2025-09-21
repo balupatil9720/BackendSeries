@@ -4,6 +4,8 @@ import { User } from "../models/user.model.js";
 import { UploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
+
+
 // const registerUser=asyncHandler(async (req,res)=>{
 //   res.status(200).json({
 //         message:"ok"
@@ -24,7 +26,8 @@ const registerUser=asyncHandler(async (req,res)=>{
     // check for user creation
     // return  response
 
-
+console.log("Files received:", req.files);
+console.log("Body received:", req.body);
      //get user details from frontend( through postman)
     const {fullName,username,email,password}=req.body
     console.log("email: ",email)
@@ -33,27 +36,34 @@ const registerUser=asyncHandler(async (req,res)=>{
 
         // validation--->not empty/correct email format
 
-    if (
-        [fullName,username,email,password].some((field)=>field?.trim()==="")
-    ) {
-         throw new ApiError(400,"All fields are  Required")
-    }
+   if ([fullName, username, email, password].some((field) => !String(field || "").trim())) {
+  throw new ApiError(400, "All fields are Required");
+}
+
 
     if(!email.includes('@')){
          throw new ApiError(400,"Enter the valid email")
     }
     
     // check is user already exist:username,email
-     const ExistedUser=User.findOne({
+     const ExistedUser= await User.findOne({
         $or:[ {username} ,{ email }]
     })
  if(ExistedUser){
     throw new ApiError(409,"username or email exists")
  }
+// if (ExistedUser) {
+//   return res.status(409).json({
+//     status: "fail",
+//     message: "Username or email already registered."
+//   });
+// }
 
+ console.log(req.files)
  // check for images,check for avatar--->multer
-  const avatarLocalPath=req.files?.avatar[0]?.path;
-  const coverImageLocalPath=req.files?.coverImage[0]?.path;
+ const avatarLocalPath = req.files?.avatar?.[0]?.path;
+const coverImageLocalPath = req.files?.coverImage?.[0]?.path || null;
+
 
   if(!avatarLocalPath){
     throw new ApiError(400,"avatar file is required")

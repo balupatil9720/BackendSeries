@@ -208,8 +208,12 @@ const logoutUser= asyncHandler (async(req,res)=>{
    await User.findByIdAndUpdate(
     req.user._id,
     {
-      $set:{
-        refreshToken:undefined
+      // $set:{
+      //   refreshToken:undefined    // it also works
+      // }
+
+      $unset:{
+        refreshToken:1
       }
     },{
       new:true
@@ -313,7 +317,7 @@ const ChangeCurrentPassword=asyncHandler(async(req,res)=>{
   if (!fullName||!email) {
     throw new ApiError(400,"All Fields are Required")
   }
-   const user=User.findByIdAndUpdate(
+   const user= await User.findByIdAndUpdate(
     req.user?._id,
     {   $set:{      // mongodb ke operators 
       fullName,
@@ -341,7 +345,7 @@ const ChangeCurrentPassword=asyncHandler(async(req,res)=>{
     if (!avatar.url) {
       throw new ApiError(400,"Error while uploading avatar on Cloudinary")
     }
-      const user=User.findByIdAndUpdate(
+      const user= await User.findByIdAndUpdate(
     req.user?._id,
     {   $set:
       {      // mongodb ke operators 
@@ -368,7 +372,7 @@ const ChangeCurrentPassword=asyncHandler(async(req,res)=>{
     if (!coverImage.url) {
       throw new ApiError(400,"Error while uploading coverImage on Cloudinary")
     }
-      const user=User.findByIdAndUpdate(
+      const user= await User.findByIdAndUpdate(
     req.user?._id,
     {   $set:
       {      // mongodb ke operators 
@@ -421,7 +425,18 @@ const ChangeCurrentPassword=asyncHandler(async(req,res)=>{
               },
               isSubsribed:{  //  to check wheteher i  have subscribed  to channel or not
                 $cond:{
-                  if:{$in:[req.user?._id,"subscribers.subscriber"]},
+                  if: {
+      $in: [
+        req.user?._id,
+        {
+          $map: {
+            input: "$subscribers",
+            as: "sub",
+            in: "$$sub.subscriber"
+          }
+        }
+      ]
+    },
                   then:true,
                   else:false
                 }

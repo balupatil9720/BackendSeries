@@ -14,7 +14,6 @@ import {
     } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWt } from "../middlewares/auth.middleware.js";
-import { verify } from "jsonwebtoken";
 
 
 
@@ -35,13 +34,13 @@ router.route("/login").post(loginUser)
 // secured routes
 router.route("/logout").post(verifyJWt,logoutUser)
 
-router.route("/refresh_token").post(RefreshAccessToken)
+router.route("/refresh-token").post(RefreshAccessToken)
 
 router.route("/change-password").post(verifyJWt,ChangeCurrentPassword)
 router.route("/current-user").post(verifyJWt,getCurrentUser)
 // verifyJwt---> to check if user  logged in or not
 router
-.route("update_account")
+.route("/update-account")
 .patch(
   verifyJWt,
   UpdateAccountDetails)

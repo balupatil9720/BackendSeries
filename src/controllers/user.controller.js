@@ -4,6 +4,7 @@ import { User } from "../models/user.model.js";
 import { UploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
+import mongoose, { overwriteMiddlewareResult } from "mongoose";
 
 
 const  GenerateAccessAndRefreshToken = async(userId)=>{
@@ -382,6 +383,121 @@ const ChangeCurrentPassword=asyncHandler(async(req,res)=>{
  .json(new ApiResponse(200,user,"CoverImage Updated Successfully"))
 
  })
+
+ const getUserChannelProfile=asyncHandler(async(req,res)=>{
+      const {username}=req.params
+      if (!username?.trim()) {
+        throw new ApiError(400,"username is missing")
+      }
+
+      // writing mongo db pipelines
+       const channel=await User.aggregate([
+        {
+          $match:{
+            username:username?.toLowerCase()
+          }
+        },{
+          $lookup:{      // to find  who have subscribed the channel
+            from:"subscriptions",
+            localField:"_id",
+            foreignField:"channel",
+            as:"subscribers"
+          }
+        },
+        {
+          $lookup:{      // to find to whom i have subscribed 
+            from:"subscriptions",
+            localField:"_id",
+            foreignField:"subscriber",
+            as:"subscribedTo"
+          }
+        },{
+          $addFields:{    
+              subscrriberscount:{    // to find no of subscribers to channel
+                $size:"$subscribers"
+              },
+              channelSubsrcibedTo:{  // to find number of channels which i am subscribed 
+                $size:"$subscribedTo"
+              },
+              isSubsribed:{  //  to check wheteher i  have subscribed  to channel or not
+                $cond:{
+                  if:{$in:[req.user?._id,"subscribers.subscriber"]},
+                  then:true,
+                  else:false
+                }
+              }
+          }
+        },{
+          $project:{    // gives the fields that shows whichever to display/ tto give to frotend
+            fullName:1,
+            username:1,
+             subscrriberscount:1,
+              channelSubsrcibedTo:1,
+              isSubsribed:1,
+              avatar:1,
+              coverImage:1,
+              email:1
+
+          }
+        }
+       ])
+       if (!channel) {
+        throw new ApiError(404,"Channel does not exist")
+       }
+
+       return res
+       .status(200)
+       .json( new ApiResponse(200,channel[0],"User channel fetched Successfully"))
+ })
+
+ const getWatchHistory=asyncHandler(async(req,res)=>{
+//  req.user._id---> usually get string which at the backend is converted into mongodb id
+ // but aggeration pipelines ka code directly jata hai hence we need to convert that
+const user=await User.aggregate([
+  {
+     $match:{
+      _id: new mongoose.Types.ObjectId(req.user._id)
+     }
+  },{
+    $lookup:{
+      from:"videos",
+      localField:"watchHistory",
+      foreignField:"_id",
+      as:"watchHistory",
+      pipeline:[          // writing the sub pipelines
+        {
+          $lookup:{
+            from:"users",
+            localField:"owner",
+            foreignField:"_id",
+            as:"owner",
+            pipeline:[
+              {
+                $project:{
+                  fullName:1,
+                  username:1,
+                  avatar:1
+                }
+              }
+            ]
+          }
+        },{
+          $addFields:{
+            owner:{
+              $first:"$owner"
+            }
+          }
+        }
+      ]
+    }
+  }
+])
+ return res
+ .status(200)
+ .json(
+  new ApiResponse(200,user.watchHistory,"watchHistory fetched  Successfully")
+ )
+ })
 export {
   registerUser,
   loginUser,
@@ -391,6 +507,8 @@ export {
   getCurrentUser,
   UpdateAccountDetails,
   UpdateUserAvatar,
-  UpdateUsercoverImage
+  UpdateUsercoverImage,
+  getUserChannelProfile,
+  getWatchHistory
 
 }

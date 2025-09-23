@@ -29,6 +29,9 @@ import jwt from 'jsonwebtoken'
         type:String,   // cloudinary url
         required:true,
      },
+      coverImage: {       
+    type: String
+  },
      watchHistory:[
         {
             type:Schema.Types.ObjectId,

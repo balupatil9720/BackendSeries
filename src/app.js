@@ -26,6 +26,7 @@ app.use(cookieParser())
   import healthCheckRouter from './routes/healthcheck.routes.js';
   import  CommentRouter from './routes/comment.routes.js'
   import  TweetRouter from './routes/tweet.routes.js'
+  import  LikeRouter from './routes/like.routes.js'
 
 
   //routes declaration
@@ -33,6 +34,7 @@ app.use(cookieParser())
   app.use("/api/v1/healthcheck",healthCheckRouter)
   app.use("/api/v1/comment",CommentRouter)
   app.use("/api/v1/tweet",TweetRouter)
+  app.use("/api/v1/like",LikeRouter)
 
   // eg
   // http://localhost:8000/api/v1/users/register

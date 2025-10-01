@@ -29,6 +29,8 @@ app.use(cookieParser())
   import  LikeRouter from './routes/like.routes.js'
   import    DashboardRouter from  './routes/dashboard.routes.js'
   import   VideoRouter from  './routes/video.routes.js'
+  import SubscriptionRouter from './routes/subscription.routes.js'
+  import PlaylistRouter from './routes/playlist.routes.js'
 
 
   //routes declaration
@@ -39,6 +41,8 @@ app.use(cookieParser())
   app.use("/api/v1/like",LikeRouter)
    app.use("/api/v1/dashboard",DashboardRouter)
    app.use("/api/v1/video",VideoRouter)
+   app.use("/api/v1/subscription",SubscriptionRouter)
+   app.use("/api/v1/playlist",PlaylistRouter)
 
   // eg
   // http://localhost:8000/api/v1/users/register

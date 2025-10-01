@@ -19,7 +19,7 @@ import mongoose, { Schema } from "mongoose";
       ],
         owner: {
             type:Schema.Types.ObjectId,
-            ref:"Video"
+            ref:"User"
         }
  },{
     timestamps:true

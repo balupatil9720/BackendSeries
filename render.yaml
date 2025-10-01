@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: backend-series
+    env: node
+    region: oregon
+    branch: main
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: "8000"
+      - key: MONGODB_URI
+        value: "mongodb+srv://balupatil_db_user:Balu%409533@cluster0.anijj3g.mongodb.net/Balu?retryWrites=true&w=majority"
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: ACCESS_TOKEN_SECRET
+        value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      - key: ACCESS_TOKEN_EXPIRY
+        value: "1d"
+      - key: REFRESH_TOKEN_SECRET
+        value: "b7f1e5c9d2a84f3ab4e9c7216f8d1b9..."
+      - key: REFRESH_TOKEN_EXPIRY
+        value: "10d"
+      - key: CLOUDINARY_CLOUD_NAME
+        value: "dzomnpdtg"
+      - key: CLOUDINARY_API_KEY
+        value: "453968225161791"
+      - key: CLOUDINARY_API_SECRET
+        value: "Z4FnjiAkVpx7XfeE3B5I1ITfsBY"
